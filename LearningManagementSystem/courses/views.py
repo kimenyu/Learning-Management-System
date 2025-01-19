@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status, filters
-from rest_framework.parsers import MultiPartParser, FileUploadParser  # Add this import
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -45,7 +45,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class ModuleViewSet(viewsets.ModelViewSet):
     serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated, IsInstructorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsInstructor]
 
     def get_queryset(self):
         return Module.objects.filter(
@@ -62,15 +62,13 @@ class ModuleViewSet(viewsets.ModelViewSet):
 class ContentViewSet(viewsets.ModelViewSet):
     serializer_class = ContentSerializer
     permission_classes = [IsAuthenticated, IsInstructorOrReadOnly]
-    parser_classes = viewsets.ModelViewSet.parser_classes + [
-        MultiPartParser, FileUploadParser
-    ]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         return Content.objects.filter(
             module_id=self.kwargs['module_pk'],
             module__course_id=self.kwargs['course_pk']
-        )
+        ).prefetch_related('files')
 
     def perform_create(self, serializer):
         module = get_object_or_404(
@@ -78,8 +76,6 @@ class ContentViewSet(viewsets.ModelViewSet):
             pk=self.kwargs['module_pk'],
             course_id=self.kwargs['course_pk']
         )
-        if module.course.instructor != self.request.user:
-            raise PermissionError("Only the course instructor can add content.")
         serializer.save(module=module)
 
     def perform_destroy(self, instance):

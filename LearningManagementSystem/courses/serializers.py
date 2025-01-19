@@ -1,15 +1,64 @@
 from rest_framework import serializers
-from .models import Course, Module, Content, Enrollment
+from .models import Course, Module, Content, Enrollment,ContentFile
 
+
+# serializers.py
+class ContentFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContentFile
+        fields = ['id', 'file', 'file_type', 'created_at']
 
 class ContentSerializer(serializers.ModelSerializer):
+    files = ContentFileSerializer(many=True, read_only=True)
+    uploaded_files = serializers.ListField(
+        child=serializers.FileField(),
+        write_only=True,
+        required=False
+    )
+    file_types = serializers.ListField(
+        child=serializers.ChoiceField(choices=Content.MODULE_CONTENT_TYPE_CHOICES),
+        write_only=True,
+        required=False
+    )
+
     class Meta:
         model = Content
         fields = [
-            'id', 'module', 'content_type', 'content_file', 
-            'title', 'description', 'created_at', 'updated_at'
+            'id', 'module', 'title', 'description',
+            'files', 'uploaded_files', 'file_types',
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'module', 'created_at', 'updated_at']
+
+    def validate(self, data):
+        files = data.get('uploaded_files', [])
+        file_types = data.get('file_types', [])
+        
+        if files and not file_types:
+            raise serializers.ValidationError("Must provide file_types when uploading files")
+        
+        if file_types and not files:
+            raise serializers.ValidationError("Must provide files when specifying file_types")
+            
+        if len(files) != len(file_types):
+            raise serializers.ValidationError("Number of files must match number of file types")
+            
+        return data
+
+    def create(self, validated_data):
+        files = validated_data.pop('uploaded_files', [])
+        file_types = validated_data.pop('file_types', [])
+        
+        content = Content.objects.create(**validated_data)
+        
+        for file, file_type in zip(files, file_types):
+            ContentFile.objects.create(
+                content=content,
+                file=file,
+                file_type=file_type
+            )
+        
+        return content
 
 
 class ModuleSerializer(serializers.ModelSerializer):

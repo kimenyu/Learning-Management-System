@@ -56,31 +56,23 @@ class Content(models.Model):
         on_delete=models.CASCADE, 
         related_name='contents'
     )
-    content_type = models.CharField(max_length=50, choices=MODULE_CONTENT_TYPE_CHOICES)
-    content_file = models.FileField(upload_to='course_content/')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ['module']
-
     def __str__(self):
         return self.title
+
+class ContentFile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='course_content/')
+    file_type = models.CharField(max_length=50, choices=Content.MODULE_CONTENT_TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
     
-    def validate_file_extension(value):
-            
-    
-        ext = os.path.splitext(value.name)[1]
-        valid_extensions = {
-            'video': ['.mp4', '.avi', '.mov'],
-            'pdf': ['.pdf'],
-            'text': ['.txt', '.md']
-        }
-        
-        if not any(ext.lower() in exts for exts in valid_extensions.values()):
-            raise ValidationError('Unsupported file extension.')
+    def __str__(self):
+        return f"{self.content.title} - {self.file_type}"
 
 
 class Enrollment(models.Model):

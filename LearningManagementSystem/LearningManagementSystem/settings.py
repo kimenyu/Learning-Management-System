@@ -193,6 +193,13 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# settings.py
+# Maximum size of the entire request (adjust as needed)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+# Maximum size of file upload (adjust as needed)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

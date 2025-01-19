@@ -15,6 +15,7 @@ from .permissions import (
     IsEnrolledOrInstructor,
     IsInstructor
 )
+
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all().select_related('instructor')
     serializer_class = CourseSerializer

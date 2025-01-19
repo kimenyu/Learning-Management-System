@@ -1,6 +1,9 @@
 from django.db import models
 from accounts.models import User
 import uuid
+import os
+from django.core.exceptions import ValidationError
+
 
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -65,6 +68,19 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def validate_file_extension(value):
+            
+    
+        ext = os.path.splitext(value.name)[1]
+        valid_extensions = {
+            'video': ['.mp4', '.avi', '.mov'],
+            'pdf': ['.pdf'],
+            'text': ['.txt', '.md']
+        }
+        
+        if not any(ext.lower() in exts for exts in valid_extensions.values()):
+            raise ValidationError('Unsupported file extension.')
 
 
 class Enrollment(models.Model):

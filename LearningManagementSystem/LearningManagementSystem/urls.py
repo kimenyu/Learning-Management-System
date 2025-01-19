@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),  # Djoser Endpoints
     path('auth/', include('djoser.urls.jwt')),  # JWT Endpoints
-    path('courses/', include('courses.urls')),  # Courses Endpoints
+    path('', include('courses.urls')),  # Courses Endpoints
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

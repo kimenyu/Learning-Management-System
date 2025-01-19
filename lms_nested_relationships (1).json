@@ -1,0 +1,99 @@
+{
+    "courses": [
+        {
+            "id": 1,
+            "title": "Introduction to Python",
+            "description": "Learn the basics of Python programming.",
+            "instructor": {
+                "id": 101,
+                "username": "john_doe",
+                "email": "john@example.com",
+                "role": "instructor"
+            },
+            "modules": [
+                {
+                    "id": 201,
+                    "title": "Getting Started with Python",
+                    "description": "Introduction to Python basics.",
+                    "order": 1,
+                    "contents": [
+                        {
+                            "id": 301,
+                            "title": "Python Basics Video",
+                            "content_type": "video",
+                            "content_file": "content/python_basics.mp4",
+                            "order": 1
+                        },
+                        {
+                            "id": 302,
+                            "title": "Python Basics PDF",
+                            "content_type": "pdf",
+                            "content_file": "content/python_basics.pdf",
+                            "order": 2
+                        }
+                    ],
+                    "quizzes": [
+                        {
+                            "id": 401,
+                            "title": "Python Basics Quiz",
+                            "questions": [
+                                {
+                                    "id": 501,
+                                    "text": "What is Python?",
+                                    "question_type": "mcq",
+                                    "order": 1,
+                                    "choices": [
+                                        {
+                                            "id": 601,
+                                            "text": "A programming language",
+                                            "is_correct": true
+                                        },
+                                        {
+                                            "id": 602,
+                                            "text": "A snake",
+                                            "is_correct": false
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "enrollments": [
+                {
+                    "id": 701,
+                    "student": {
+                        "id": 102,
+                        "username": "jane_student",
+                        "email": "jane@example.com",
+                        "role": "student"
+                    },
+                    "enrolled_at": "2025-01-10T10:00:00Z"
+                }
+            ],
+            "threads": [
+                {
+                    "id": 801,
+                    "title": "Questions about Python Basics",
+                    "created_by": {
+                        "id": 102,
+                        "username": "jane_student"
+                    },
+                    "created_at": "2025-01-10T12:00:00Z",
+                    "replies": [
+                        {
+                            "id": 901,
+                            "content": "What is the difference between Python 2 and 3?",
+                            "created_by": {
+                                "id": 101,
+                                "username": "john_doe"
+                            },
+                            "created_at": "2025-01-10T13:00:00Z"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

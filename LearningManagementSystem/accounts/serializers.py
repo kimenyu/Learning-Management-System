@@ -13,7 +13,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
     def create(self, validated_data):
         # Ensure that role and username are passed correctly if not handled by Djoser
         username = validated_data.get('username')
-        role = validated_data.get('role', 'customer')  # default role if not provided
+        role = validated_data.get('role', 'student')  # default role if not provided
         user = User.objects.create_user(
             username=username,
             email=validated_data['email'],

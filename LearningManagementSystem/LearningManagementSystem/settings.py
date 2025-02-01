@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'channels',
     'courses',
     'django_filters',
+    'quizzes',
 ]
 
 MIDDLEWARE = [

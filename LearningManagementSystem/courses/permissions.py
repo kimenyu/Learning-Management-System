@@ -26,3 +26,7 @@ class IsEnrolledOrInstructor(permissions.BasePermission):
 class IsInstructor(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.role == 'instructor'
+    
+class IsEnrolledStudent(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == 'student' and Quiz.objects.filter(module__course__enrollments__student=request.user).exists()

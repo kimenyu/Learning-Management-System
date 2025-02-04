@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Quiz, Question, Choice, StudentAnswer, Grade
-from serializers import QuizSerializer, QuestionSerializer, ChoiceSerializer, StudentAnswerSerializer, GradeSerializer
+from .serializers import QuizSerializer, QuestionSerializer, ChoiceSerializer, StudentAnswerSerializer, GradeSerializer
 # Quiz ViewSet
 class QuizViewSet(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()

@@ -31,7 +31,6 @@ A robust, scalable, and feature-rich **Learning Management System (LMS)** backen
 - **Async**: Redis
 - **Storage**: Cloudinary
 - **Database**: Default SQLite (easy to swap with PostgreSQL)
-- **External Services**: Firebase, Google APIs
 
 ---
 
@@ -45,7 +44,7 @@ LearningManagementSystem/
 ├── media/          # Uploaded content files
 ├── manage.py
 ├── requirements.txt
-└── .env            # Environment config (not shared)
+└── .env            
 ```
 
 ---
@@ -101,7 +100,7 @@ python manage.py runserver
 ## 📑 API Documentation
 
 - Swagger/OpenAPI: auto-generated using **drf-spectacular**
-- Access it at `/api/schema/` and `/api/docs/` after running the server.
+- Access it at `/api/schema/`, `api/docs/swagger/` and `api/docs/redoc/` after running the server.
 
 
 ## ☁️ Deployment Notes
@@ -119,7 +118,7 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
-**Your Name**  
+**Njoroge Joseph**  
 Backend Developer | Python | Django | REST APIs  
 [GitHub](https://github.com/kimenyu)
 

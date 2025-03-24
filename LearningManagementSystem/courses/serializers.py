@@ -58,7 +58,7 @@ class ContentSerializer(serializers.ModelSerializer):
         for file, file_type in zip(files, file_types):
             ContentFile.objects.create(
                 content=content,
-                file=file,  # This will now upload directly to Cloudinary
+                file=file,
                 file_type=file_type
             )
 

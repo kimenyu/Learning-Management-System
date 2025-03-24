@@ -14,6 +14,13 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+# env = environ.Env()
+# environ.Env.read_env()
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,7 +61,7 @@ INSTALLED_APPS = [
     'channels',
     'courses',
     'django_filters',
-    'quizzes',
+    'quizzes'
 ]
 
 MIDDLEWARE = [
@@ -194,6 +201,16 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET')
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # settings.py
 # Maximum size of the entire request (adjust as needed)

@@ -4,9 +4,15 @@ from .models import Course, Module, Content, Enrollment,ContentFile
 
 # serializers.py
 class ContentFileSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = ContentFile
-        fields = ['id', 'file', 'file_type', 'created_at']
+        fields = ['id', 'file', 'file_url', 'file_type', 'created_at']
+
+    def get_file_url(self, obj):
+        return obj.file.url if obj.file else None
+
 
 class ContentSerializer(serializers.ModelSerializer):
     files = ContentFileSerializer(many=True, read_only=True)
@@ -33,31 +39,29 @@ class ContentSerializer(serializers.ModelSerializer):
     def validate(self, data):
         files = data.get('uploaded_files', [])
         file_types = data.get('file_types', [])
-        
+
         if files and not file_types:
             raise serializers.ValidationError("Must provide file_types when uploading files")
-        
         if file_types and not files:
             raise serializers.ValidationError("Must provide files when specifying file_types")
-            
         if len(files) != len(file_types):
             raise serializers.ValidationError("Number of files must match number of file types")
-            
+
         return data
 
     def create(self, validated_data):
         files = validated_data.pop('uploaded_files', [])
         file_types = validated_data.pop('file_types', [])
-        
+
         content = Content.objects.create(**validated_data)
-        
+
         for file, file_type in zip(files, file_types):
             ContentFile.objects.create(
                 content=content,
-                file=file,
+                file=file,  # This will now upload directly to Cloudinary
                 file_type=file_type
             )
-        
+
         return content
 
 

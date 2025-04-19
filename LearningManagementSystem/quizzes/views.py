@@ -79,11 +79,21 @@ class StudentAnswerViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        queryset = None
+        
         if user.role == 'student':
-            return StudentAnswer.objects.filter(student=user)
+            queryset = StudentAnswer.objects.filter(student=user)
         elif user.role == 'instructor':
-            return StudentAnswer.objects.filter(question__quiz__module__course__instructor=user)
-        return StudentAnswer.objects.none()
+            queryset = StudentAnswer.objects.filter(question__quiz__module__course__instructor=user)
+        else:
+            return StudentAnswer.objects.none()
+        
+        # Apply additional filters from query params
+        quiz_id = self.request.query_params.get('quiz')
+        if quiz_id:
+            queryset = queryset.filter(question__quiz_id=quiz_id)
+            
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(student=self.request.user)  # ✅ this sets the student automatically

@@ -16,13 +16,21 @@ from .permissions import (
     IsInstructor
 )
 
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import action
+from .permissions import IsInstructor, IsInstructorOrReadOnly
+
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all().select_related('instructor')
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsInstructorOrReadOnly]
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'description', 'instructor__email']
-    ordering_fields = ['created_at', 'title']
+    permission_classes = [IsAuthenticated]  # Default for other actions
+
+    def get_permissions(self):
+        if self.action == 'enroll':
+            return [IsAuthenticated()]  # ✅ Students need to be authenticated
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsInstructor()]
+        return super().get_permissions()
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -72,11 +80,18 @@ class ContentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         module = get_object_or_404(
-            Module,
-            pk=self.kwargs['module_pk'],
-            course_id=self.kwargs['course_pk']
+        Module,
+        pk=self.kwargs['module_pk'],
+        course_id=self.kwargs['course_pk']
         )
+
+        # ✅ Correct check: access course through the actual module instance
+        if module.course.instructor != self.request.user:
+            raise PermissionError("Only the course instructor can add contents.")
+
         serializer.save(module=module)
+
+
 
     def perform_destroy(self, instance):
         # Delete the associated file before deleting the Content object

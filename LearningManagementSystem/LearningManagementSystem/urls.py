@@ -23,8 +23,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('djoser.urls')),  # Djoser Endpoints
-    path('auth/', include('djoser.urls.jwt')),  # JWT Endpoints
+    path('api/auth/', include('accounts.urls')),
+    # path('auth/', include('djoser.urls')),  # Djoser Endpoints
+    # path('auth/', include('djoser.urls.jwt')),  # JWT Endpoints
     path('', include('courses.urls')),  # Courses Endpoints
     path('', include('quizzes.urls')),  # Quizzes Endpoints
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema

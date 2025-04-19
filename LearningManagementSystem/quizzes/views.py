@@ -43,6 +43,11 @@ class ChoiceViewSet(viewsets.ModelViewSet):
             return Choice.objects.filter(question__quiz__module__course__enrollments__student=user)
         return Choice.objects.none()
 
+    def perform_create(self, serializer):
+        question_id = self.kwargs.get('question_pk')  # From nested router
+        serializer.save(question_id=question_id)
+
+
 # Student Answer ViewSet (Students can submit answers, instructors can view them)
 class StudentAnswerViewSet(viewsets.ModelViewSet):
     serializer_class = StudentAnswerSerializer

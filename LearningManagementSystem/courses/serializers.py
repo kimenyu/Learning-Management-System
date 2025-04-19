@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Course, Module, Content, Enrollment,ContentFile
-
+from quizzes.serializers import QuizSerializer
 
 # serializers.py
 class ContentFileSerializer(serializers.ModelSerializer):
@@ -67,14 +67,16 @@ class ContentSerializer(serializers.ModelSerializer):
 
 class ModuleSerializer(serializers.ModelSerializer):
     contents = ContentSerializer(many=True, read_only=True)
+    quizzes = QuizSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Module
         fields = [
-            'id', 'course', 'title', 'description',
-            'contents', 'created_at', 'updated_at'
+            'id', 'course', 'title', 'description', 
+            'contents', 'created_at', 'updated_at', 'quizzes'
         ]
-        read_only_fields = ['id', 'course', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'course', 'created_at', 'updated_at', 'quizzes']
 
 
 

@@ -25,21 +25,39 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'module', 'created_at', 'questions']
 
 # Student Answer Serializer
+from rest_framework import serializers
+from .models import StudentAnswer, Question, Choice
+from accounts.models import User
+
 class StudentAnswerSerializer(serializers.ModelSerializer):
+    question_text = serializers.SerializerMethodField()
+    selected_choice_text = serializers.SerializerMethodField()
+    student_email = serializers.SerializerMethodField()
+
     class Meta:
         model = StudentAnswer
-        fields = ['id', 'student', 'question', 'selected_choice', 'text_answer', 'submitted_at']
-        extra_kwargs = {
-            'student': {'read_only': True}
-        }
+        fields = [
+            'id', 'student', 'question', 'selected_choice', 'text_answer',
+            'question_text', 'selected_choice_text', 'student_email'
+        ]
+        read_only_fields = ['student']  # ✅ tell DRF not to require this field in POST
 
-    def create(self, validated_data):
-        validated_data['student'] = self.context['request'].user
-        return super().create(validated_data)
+    def get_question_text(self, obj):
+        return obj.question.question if obj.question else None
+
+    def get_selected_choice_text(self, obj):
+        return obj.selected_choice.text if obj.selected_choice else None
+
+    def get_student_email(self, obj):
+        return obj.student.email if obj.student else None
+
+
 
 
 # Grade Serializer
 class GradeSerializer(serializers.ModelSerializer):
+    quiz_title = serializers.CharField(source='quiz.title', read_only=True)
+
     class Meta:
         model = Grade
-        fields = ['id', 'student', 'quiz', 'score', 'submitted_at']
+        fields = ['id', 'student', 'quiz', 'quiz_title', 'score']

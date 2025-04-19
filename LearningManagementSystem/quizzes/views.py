@@ -37,15 +37,34 @@ class ChoiceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        question_pk = self.kwargs.get('question_pk')
+        
+        # Debug logging
+        print(f"ChoiceViewSet - Getting choices for question_pk: {question_pk}")
+        
+        # First, filter by question_pk to ensure we only get choices for the current question
+        base_queryset = Choice.objects.filter(question_id=question_pk)
+        
+        # Then apply role-based filtering
         if user.role == 'instructor':
-            return Choice.objects.filter(question__quiz__module__course__instructor=user)
+            queryset = base_queryset.filter(question__quiz__module__course__instructor=user)
         elif user.role == 'student':
-            return Choice.objects.filter(question__quiz__module__course__enrollments__student=user)
-        return Choice.objects.none()
+            queryset = base_queryset.filter(question__quiz__module__course__enrollments__student=user)
+        else:
+            queryset = Choice.objects.none()
+        
+        # Debug logging
+        print(f"ChoiceViewSet - Found {queryset.count()} choices for question {question_pk}")
+        
+        return queryset
 
     def perform_create(self, serializer):
-        question_id = self.kwargs.get('question_pk')  # From nested router
-        serializer.save(question_id=question_id)
+        question_pk = self.kwargs.get('question_pk')
+        question = Question.objects.get(pk=question_pk)
+        # Debug logging
+        print(f"ChoiceViewSet - Creating choice for question: {question_pk}")
+        serializer.save(question=question)
+
 
 
 # Student Answer ViewSet (Students can submit answers, instructors can view them)

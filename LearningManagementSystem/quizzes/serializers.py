@@ -29,6 +29,14 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentAnswer
         fields = ['id', 'student', 'question', 'selected_choice', 'text_answer', 'submitted_at']
+        extra_kwargs = {
+            'student': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        validated_data['student'] = self.context['request'].user
+        return super().create(validated_data)
+
 
 # Grade Serializer
 class GradeSerializer(serializers.ModelSerializer):

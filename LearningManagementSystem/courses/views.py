@@ -94,10 +94,11 @@ class ContentViewSet(viewsets.ModelViewSet):
 
 
     def perform_destroy(self, instance):
-        # Delete the associated file before deleting the Content object
-        if instance.content_file:
-            instance.content_file.delete(save=False)
+        # Delete all related files first (optional)
+        for file in instance.files.all():
+            file.delete()
         instance.delete()
+
 
 
 class EnrollmentViewSet(viewsets.ModelViewSet):

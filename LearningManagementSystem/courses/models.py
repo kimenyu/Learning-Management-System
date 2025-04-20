@@ -4,6 +4,8 @@ import uuid
 import os
 from django.core.exceptions import ValidationError
 from cloudinary.models import CloudinaryField
+from cloudinary.uploader import upload
+
 
 
 class Course(models.Model):
@@ -68,12 +70,13 @@ class Content(models.Model):
 class ContentFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='files')
-    file = CloudinaryField('file')
+    file = CloudinaryField('file', resource_type='auto')
     file_type = models.CharField(max_length=50, choices=Content.MODULE_CONTENT_TYPE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return f"{self.content.title} - {self.file_type}"
+    
 
 
 class Enrollment(models.Model):

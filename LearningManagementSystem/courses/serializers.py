@@ -11,8 +11,9 @@ class ContentFileSerializer(serializers.ModelSerializer):
         fields = ['id', 'file', 'file_url', 'file_type', 'created_at']
 
     def get_file_url(self, obj):
-        return obj.file.url if obj.file else None
-
+        if not obj.file:
+            return None
+        return obj.file.url
 
 class ContentSerializer(serializers.ModelSerializer):
     files = ContentFileSerializer(many=True, read_only=True)
@@ -35,6 +36,8 @@ class ContentSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'module', 'created_at', 'updated_at']
+        
+        
 
     def validate(self, data):
         files = data.get('uploaded_files', [])

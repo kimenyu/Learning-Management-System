@@ -24,11 +24,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        quiz_id = self.kwargs.get('quiz_pk')  # works with nested routers
+
+        base_queryset = Question.objects.filter(quiz_id=quiz_id)
+
         if user.role == 'instructor':
-            return Question.objects.filter(quiz__module__course__instructor=user)
+            return base_queryset.filter(quiz__module__course__instructor=user)
         elif user.role == 'student':
-            return Question.objects.filter(quiz__module__course__enrollments__student=user)
+            return base_queryset.filter(quiz__module__course__enrollments__student=user)
         return Question.objects.none()
+
 
 # Choice ViewSet (Only instructors can add choices, students can only view them)
 class ChoiceViewSet(viewsets.ModelViewSet):

@@ -8,9 +8,11 @@ class ContentFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContentFile
-        fields = ['id', 'file', 'file_url', 'file_type', 'created_at']
+        fields = ['id', 'file', 'file_url', 'external_link', 'file_type', 'created_at']
 
     def get_file_url(self, obj):
+        if obj.external_link:
+            return obj.external_link
         if not obj.file:
             return None
         return obj.file.url
@@ -18,7 +20,12 @@ class ContentFileSerializer(serializers.ModelSerializer):
 class ContentSerializer(serializers.ModelSerializer):
     files = ContentFileSerializer(many=True, read_only=True)
     uploaded_files = serializers.ListField(
-        child=serializers.FileField(),
+        child=serializers.FileField(allow_empty_file=True, required=False),
+        write_only=True,
+        required=False
+    )
+    external_links = serializers.ListField(
+        child=serializers.URLField(),
         write_only=True,
         required=False
     )
@@ -32,36 +39,47 @@ class ContentSerializer(serializers.ModelSerializer):
         model = Content
         fields = [
             'id', 'module', 'title', 'description',
-            'files', 'uploaded_files', 'file_types',
+            'files', 'uploaded_files', 'external_links', 'file_types',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'module', 'created_at', 'updated_at']
         
-        
-
     def validate(self, data):
         files = data.get('uploaded_files', [])
+        links = data.get('external_links', [])
         file_types = data.get('file_types', [])
-
-        if files and not file_types:
-            raise serializers.ValidationError("Must provide file_types when uploading files")
-        if file_types and not files:
-            raise serializers.ValidationError("Must provide files when specifying file_types")
-        if len(files) != len(file_types):
-            raise serializers.ValidationError("Number of files must match number of file types")
-
+        
+        total_items = len(files) + len(links)
+        
+        if total_items == 0 and file_types:
+            raise serializers.ValidationError("Must provide files or links when specifying file_types")
+        if file_types and total_items != len(file_types):
+            raise serializers.ValidationError("Number of files and links combined must match number of file types")
+        
         return data
 
     def create(self, validated_data):
         files = validated_data.pop('uploaded_files', [])
+        links = validated_data.pop('external_links', [])
         file_types = validated_data.pop('file_types', [])
 
         content = Content.objects.create(**validated_data)
-
-        for file, file_type in zip(files, file_types):
+        
+        # Process uploads
+        for file, file_type in zip(files, file_types[:len(files)]):
+            if file:
+                ContentFile.objects.create(
+                    content=content,
+                    file=file,
+                    file_type=file_type
+                )
+        
+        # Process links
+        link_types = file_types[len(files):] if file_types else []
+        for link, file_type in zip(links, link_types):
             ContentFile.objects.create(
                 content=content,
-                file=file,
+                external_link=link,
                 file_type=file_type
             )
 

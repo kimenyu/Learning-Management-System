@@ -31,6 +31,29 @@ class LoginView(APIView):
             "access": str(refresh.access_token),
         })
 
+from .serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
+
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "Password reset link sent!"})
+        return Response(serializer.errors, status=400)
+
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "Password reset successful"})
+        return Response(serializer.errors, status=400)
+
 
 
 class ProfileView(generics.RetrieveAPIView):

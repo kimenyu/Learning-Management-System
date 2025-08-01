@@ -23,11 +23,11 @@ from .permissions import IsInstructor, IsInstructorOrReadOnly
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all().select_related('instructor')
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated]  # Default for other actions
+    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.action == 'enroll':
-            return [IsAuthenticated()]  # ✅ Students need to be authenticated
+            return [IsAuthenticated()] 
         elif self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [IsInstructor()]
         return super().get_permissions()
@@ -85,7 +85,6 @@ class ContentViewSet(viewsets.ModelViewSet):
         course_id=self.kwargs['course_pk']
         )
 
-        # ✅ Correct check: access course through the actual module instance
         if module.course.instructor != self.request.user:
             raise PermissionError("Only the course instructor can add contents.")
 
@@ -94,7 +93,6 @@ class ContentViewSet(viewsets.ModelViewSet):
 
 
     def perform_destroy(self, instance):
-        # Delete all related files first (optional)
         for file in instance.files.all():
             file.delete()
         instance.delete()

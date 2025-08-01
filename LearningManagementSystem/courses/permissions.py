@@ -1,4 +1,3 @@
-# permissions.py
 from rest_framework import permissions
 from .models import Enrollment
 from quizzes.models import Quiz

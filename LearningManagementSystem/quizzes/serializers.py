@@ -40,8 +40,7 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
             'id', 'student', 'question', 'selected_choice', 'text_answer',
             'question_text', 'selected_choice_text', 'student_email'
         ]
-        read_only_fields = ['student']  # ✅ tell DRF not to require this field in POST
-
+        read_only_fields = ['student']  
     def get_question_text(self, obj):
         return obj.question.question if obj.question else None
 

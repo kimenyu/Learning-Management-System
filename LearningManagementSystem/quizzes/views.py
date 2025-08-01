@@ -3,6 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Quiz, Question, Choice, StudentAnswer, Grade
 from .serializers import QuizSerializer, QuestionSerializer, ChoiceSerializer, StudentAnswerSerializer, GradeSerializer
 from courses.permissions import IsInstructor, IsEnrolledStudent
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
+from .models import StudentAnswer
+from .serializers import StudentAnswerSerializer
 
 # Quiz ViewSet (Only instructors can create quizzes, students can only view their enrolled course quizzes)
 class QuizViewSet(viewsets.ModelViewSet):
@@ -73,10 +77,6 @@ class ChoiceViewSet(viewsets.ModelViewSet):
 
 
 # Student Answer ViewSet (Students can submit answers, instructors can view them)
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets
-from .models import StudentAnswer
-from .serializers import StudentAnswerSerializer
 
 class StudentAnswerViewSet(viewsets.ModelViewSet):
     serializer_class = StudentAnswerSerializer
@@ -101,7 +101,7 @@ class StudentAnswerViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(student=self.request.user)  # ✅ this sets the student automatically
+        serializer.save(student=self.request.user) 
 
 # Grade ViewSet (Students can view their grades, instructors can assign grades)
 class GradeViewSet(viewsets.ModelViewSet):

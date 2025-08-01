@@ -1,11 +1,11 @@
 
-# 🧠 Learning Management System Backend
+#  Learning Management System Backend
 
 A robust, scalable, and feature-rich **Learning Management System (LMS)** backend built with Django REST Framework (DRF). This project enables educational platforms to manage users, courses, content, quizzes, grading, and more through a clean RESTful API architecture.
 
 ---
 
-## 🚀 Features
+## Features
 
 - **Role-Based Access Control**: Admin, Instructor, and Student roles with customized permissions.
 - **Course Management**: Instructors can create, update, and publish courses.

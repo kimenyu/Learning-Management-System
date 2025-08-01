@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Course, Module, Content, Enrollment,ContentFile
 from quizzes.serializers import QuizSerializer
 
-# serializers.py
 class ContentFileSerializer(serializers.ModelSerializer):
     file_url = serializers.SerializerMethodField()
 

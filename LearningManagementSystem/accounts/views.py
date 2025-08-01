@@ -24,7 +24,7 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
 
-        refresh = CustomTokenObtainPairSerializer.get_token(user)  # ✅ use custom claims
+        refresh = CustomTokenObtainPairSerializer.get_token(user) 
         return Response({
             "user": UserSerializer(user).data,
             "refresh": str(refresh),

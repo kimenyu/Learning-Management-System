@@ -24,7 +24,7 @@ A robust, scalable, and feature-rich **Learning Management System (LMS)** backen
  
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Backend**: Django 5.1, Django REST Framework
 - **Auth**: JWT
@@ -34,7 +34,7 @@ A robust, scalable, and feature-rich **Learning Management System (LMS)** backen
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```bash
 LearningManagementSystem/
@@ -49,7 +49,7 @@ LearningManagementSystem/
 
 ---
 
-## 🔐 User Roles
+##  User Roles
 
 - **Admin**: Full access to all features and user management
 - **Instructor**: Can create courses, content, quizzes
@@ -59,7 +59,7 @@ Custom user model is defined in `accounts.models.User`, extending `AbstractUser`
 
 ---
 
-## 📦 Installation
+##  Installation
 
 ### Prerequisites
 - Python 3.10+
@@ -97,26 +97,26 @@ python manage.py runserver
 
 ---
 
-## 📑 API Documentation
+##  API Documentation
 
 - Swagger/OpenAPI: auto-generated using **drf-spectacular**
 - Access it at `/api/schema/`, `api/docs/swagger/` and `api/docs/redoc/` after running the server.
 
 
-## ☁️ Deployment Notes
+## ☁ Deployment Notes
 
 - Easily deployable to platforms like **Render**, **Heroku**, or **DigitalOcean**
 - Be sure to set production environment variables and switch database to PostgreSQL
 
 ---
 
-## 📄 License
+##  License
 
 This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
-## 👨‍💻 Author
+##  Author
 
 **Njoroge Joseph**  
 Backend Developer | Python | Django | REST APIs  
@@ -124,6 +124,6 @@ Backend Developer | Python | Django | REST APIs
 
 ---
 
-## 🙌 Contributions
+##  Contributions
 
 Pull requests and feature suggestions are welcome! Feel free to fork and contribute.

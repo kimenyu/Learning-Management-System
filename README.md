@@ -100,13 +100,6 @@ python manage.py runserver
 ##  API Documentation
 
 - Swagger/OpenAPI: auto-generated using **drf-spectacular**
-- Access it at `/api/schema/`, `api/docs/swagger/` and `api/docs/redoc/` after running the server.
-
-
-## ☁ Deployment Notes
-
-- Easily deployable to platforms like **Render**, **Heroku**, or **DigitalOcean**
-- Be sure to set production environment variables and switch database to PostgreSQL
 
 ---
 
